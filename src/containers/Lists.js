@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 import SubHeader from '../components/Header/SubHeader';
@@ -32,21 +32,27 @@ const Alert = styled.span`
   text-align: center;
 `;
 
-const Lists = ({ lists, data, loading = false, error = false, match, history }) =>
-  !loading && !error ? (
+const Lists = ({ lists, loading, error, getListsRequest, match, history }) => {
+  React.useEffect(() => {
+    if (!lists.length) {
+      getListsRequest();
+    }
+  }, [lists, getListsRequest]);
+
+  return !loading && !error ? (
     <>
       {history && <SubHeader title='Your Lists' />}
       <ListWrapper>
-        {data &&
-          data.map(list => (
+        {lists &&
+          lists.map(list => (
             <ListLink key={list.id} to={`list/${list.id}`}>
               <Title>{list.title}</Title>
             </ListLink>
           ))}
       </ListWrapper>
     </>
-  ) : (
+  ) :
     <Alert>{loading ? 'Loading...' : error}</Alert>
-  );
+};
 
 export default Lists;
