@@ -38,13 +38,33 @@ const Form = ({ match, history }) => {
   return (
     <>
       {history && (
-        <SubHeader goBack={() => history.goBack()} title={`Add Item`} />
+        <SubHeader goBack={() => history.goBack()} title='Add Item' />
       )}
       <FormWrapper>
         <form onSubmit={handleOnSubmit}>
-          <FormItem id='title' label='Title' placeholder='Insert title' value={title} handleOnChange={setTitle} />
-          <FormItem id='quantity' label='Quantity' type='number' placeholder='0' value={quantity} handleOnChange={setQuantity} />
-          <FormItem id='price' label='Price' type='number' placeholder='0.00' value={price} handleOnChange={setPrice} />
+          <FormItem
+            id='title'
+            label='Title'
+            placeholder='Insert title'
+            value={title}
+            handleOnChange={setTitle}
+          />
+          <FormItem
+            id='quantity'
+            label='Quantity'
+            type='number'
+            placeholder='0'
+            value={quantity}
+            handleOnChange={setQuantity}
+          />
+          <FormItem
+            id='price'
+            label='Price'
+            type='number'
+            placeholder='0.00'
+            value={price}
+            handleOnChange={setPrice}
+          />
           <SubmitButton>Add Item</SubmitButton>
         </form>
       </FormWrapper>

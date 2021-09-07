@@ -6,7 +6,7 @@ const withDataFetching = props => WrappedComponent => {
       super();
       this.state = {
         data: [],
-        loading: false,
+        loading: true,
         error: '',
       };
     }

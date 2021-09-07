@@ -19,20 +19,30 @@ const Alert = styled.span`
 
 const List = ({ match, history }) => {
   const { list, getListRequest } = React.useContext(ListsContext);
-  const { loading, error, items, getItemsRequest } = React.useContext(ItemsContext);
+  const { loading, error, items, getItemsRequest } =
+    React.useContext(
+      ItemsContext,
+    );
+
   React.useEffect(() => {
     if (!list.id) {
       getListRequest(match.params.id);
     }
-    if (!items.length > 0) {
+
+    if (!items.length) {
       getItemsRequest(match.params.id);
-    };
-  }, [items, list, match.params.id, getItemsRequest, getListRequest]);
+    }
+  }, [getItemsRequest, getListRequest, items, list, match.params.id]);
 
   return !loading && !error ? (
     <>
-      {history && list && <SubHeader goBack={() => history.goBack()}
-        title={list.title} openForm={() => history.push(`${match.url}/new`)} />}
+      {history && list && (
+        <SubHeader
+          goBack={() => history.goBack()}
+          title={list.title}
+          openForm={() => history.push(`${match.url}/new`)}
+        />
+      )}
       <ListItemWrapper>
         {items && items.map(item => <ListItem key={item.id} data={item} />)}
       </ListItemWrapper>

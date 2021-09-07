@@ -33,9 +33,11 @@ const Alert = styled.span`
   text-align: center;
 `;
 
-const Lists = ({ match, history }) => {
-  const { lists, loading, error, getListsRequest } = React.useContext(ListsContext);
-  React.useEffect(() => {
+const Lists = ({ history }) => {
+  const { lists, loading, error, getListsRequest } = React.useContext(
+    ListsContext,
+  );
+  React.useLayoutEffect(() => {
     if (!lists.length) {
       getListsRequest();
     }
@@ -53,8 +55,8 @@ const Lists = ({ match, history }) => {
           ))}
       </ListWrapper>
     </>
-  ) :
+  ) : (
     <Alert>{loading ? 'Loading...' : error}</Alert>
+  );
 };
-
 export default Lists;

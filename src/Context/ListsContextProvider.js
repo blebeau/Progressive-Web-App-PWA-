@@ -48,10 +48,10 @@ async function fetchData(dataSource) {
         const dataJSON = await data.json();
 
         if (dataJSON) {
-            return await ({ data: dataJSON, error: false });
+            return await { data: dataJSON, error: false };
         }
     } catch (error) {
-        return ({ data: false, error: error.message });
+        return { data: false, error: error.message };
     }
 }
 
@@ -59,32 +59,36 @@ const ListsContextProvider = ({ children }) => {
     const [value, dispatch] = React.useReducer(reducer, initialValue);
 
     const getListsRequest = async () => {
-        const result = await
-            fetchData('https://my-json-server.typicode.com/PacktPublishing/React-Projects/lists');
+        const result = await fetchData(
+            'https://my-json-server.typicode.com/pranayfpackt/-React-Projects/lists',
+        );
 
         if (result.data && result.data.length) {
             dispatch({ type: 'GET_LISTS_SUCCESS', payload: result.data });
         } else {
             dispatch({ type: 'GET_LISTS_ERROR', payload: result.error });
         }
-    }
+    };
 
     const getListRequest = async id => {
-        const result = await
-            fetchData(`https://my-json-server.typicode.com/PacktPublishing/React-Projects/lists/${id}`);
+        const result = await fetchData(
+            `https://my-json-server.typicode.com/pranayfpackt/-React-Projects/lists/${id}`,
+        );
 
         if (result.data && result.data.hasOwnProperty('id')) {
-            dispatch({ type: 'GET_LIST_SUCCESS', payload: result.data })
+            dispatch({ type: 'GET_LIST_SUCCESS', payload: result.data });
         } else {
             dispatch({ type: 'GET_LIST_ERROR', payload: result.error });
         }
-    }
+    };
 
     return (
-        <ListsContext.Provider value={{ ...value, getListsRequest, getListRequest }}>
+        <ListsContext.Provider
+            value={{ ...value, getListsRequest, getListRequest }}
+        >
             {children}
         </ListsContext.Provider>
-    )
-
+    );
 };
+
 export default ListsContextProvider;

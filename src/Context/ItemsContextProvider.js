@@ -6,7 +6,7 @@ const initialValue = {
     items: [],
     loading: true,
     error: '',
-}
+};
 
 const reducer = (value, action) => {
     switch (action.type) {
@@ -19,23 +19,22 @@ const reducer = (value, action) => {
         case 'GET_ITEMS_ERROR':
             return {
                 ...value,
+                items: [],
                 loading: false,
                 error: action.payload,
             };
-        case 'ADD_ITEMS':
+        case 'ADD_ITEM_SUCCESS':
             return {
                 ...value,
-                items: [
-                    ...value.items,
-                    action.payload,
-                ]
-            }
-        case 'ADD_ITEMS_ERROR':
+                items: [...value.items, action.payload],
+                loading: false,
+            };
+        case 'ADD_ITEM_ERROR':
             return {
                 ...value,
                 loading: false,
-                error: 'Something went wrong...'
-            }
+                error: 'Something went wrong...',
+            };
         default:
             return value;
     }
@@ -47,12 +46,12 @@ async function fetchData(dataSource) {
         const dataJSON = await data.json();
 
         if (dataJSON) {
-            return await ({ data: dataJSON, error: false })
+            return await { data: dataJSON, error: false };
         }
     } catch (error) {
-        return ({ data: false, error: error.message })
+        return { data: false, error: error.message };
     }
-};
+}
 
 async function postData(dataSource, content) {
     try {
@@ -60,24 +59,23 @@ async function postData(dataSource, content) {
             method: 'POST',
             body: JSON.stringify(content),
         });
-
         const dataJSON = await data.json();
+
         if (dataJSON) {
-            return await ({ data: dataJSON, error: false });
+            return await { data: dataJSON, error: false };
         }
     } catch (error) {
-        return ({ data: false, error: error.message });
+        return { data: false, error: error.message };
     }
-};
+}
 
-// export const ItemsContext = React.createContext();
 const ItemsContextProvider = ({ children }) => {
     const [value, dispatch] = React.useReducer(reducer, initialValue);
 
-    const getItemsRequest = async (id) => {
-        const result = await
-            fetchData(`https://my-json-server.typicode.com/PacktPublishing/React-Projects/items/${id}/items`)
-
+    const getItemsRequest = async id => {
+        const result = await fetchData(
+            `https://my-json-server.typicode.com/pranayfpackt/-React-Projects/lists/${id}/items`,
+        );
 
         if (result.data && result.data.length) {
             dispatch({ type: 'GET_ITEMS_SUCCESS', payload: result.data });
@@ -86,22 +84,26 @@ const ItemsContextProvider = ({ children }) => {
         }
     };
 
-    const addItemRequest = async (content) => {
-        const result = await
-            postData('https://my-json-server.typicode.com/PacktPublishing/React-Projects/items', content);
+    const addItemRequest = async content => {
+        const result = await postData(
+            'https://my-json-server.typicode.com/pranayfpackt/-React-Projects/lists',
+            content,
+        );
 
         if (result.data && result.data.hasOwnProperty('id')) {
             dispatch({ type: 'ADD_ITEM_SUCCESS', payload: content });
         } else {
             dispatch({ type: 'ADD_ITEM_ERROR' });
         }
-    }
+    };
 
     return (
-        <ItemsContext.Provider value={{ ...value, getItemsRequest, addItemRequest }}>
-
+        <ItemsContext.Provider
+            value={{ ...value, getItemsRequest, addItemRequest }}
+        >
             {children}
         </ItemsContext.Provider>
-    )
-}
+    );
+};
+
 export default ItemsContextProvider;
