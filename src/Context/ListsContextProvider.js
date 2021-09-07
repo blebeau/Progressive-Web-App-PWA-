@@ -1,5 +1,5 @@
 import React from 'react';
-import withDataFetching from '../withDataFetching';
+
 export const ListsContext = React.createContext();
 
 const initialValue = {
@@ -80,18 +80,8 @@ const ListsContextProvider = ({ children }) => {
         }
     }
 
-    const addListRequest = (content) => {
-        actionDispatch({
-            type: 'ADD_LIST_REQUEST',
-            payload: {
-                dataSource: 'https://my-json-server.typicode.com/PacktPublishing/React-Projects /items',
-                content,
-            }
-        });
-    };
-
     return (
-        <ListsContext.Provider value={{ ...value, getListsRequest, addListRequest }}>
+        <ListsContext.Provider value={{ ...value, getListsRequest, getListRequest }}>
             {children}
         </ListsContext.Provider>
     )

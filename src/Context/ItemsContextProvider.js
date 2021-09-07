@@ -1,5 +1,7 @@
 import React from 'react';
 
+export const ItemsContext = React.createContext();
+
 const initialValue = {
     items: [],
     loading: true,
@@ -74,7 +76,7 @@ const ItemsContextProvider = ({ children }) => {
 
     const getItemsRequest = async (id) => {
         const result = await
-            fetchData(`https://my-json-server.typicode.com/PacktPublishing/React-Projects/ items/${id}/items`)
+            fetchData(`https://my-json-server.typicode.com/PacktPublishing/React-Projects/items/${id}/items`)
 
 
         if (result.data && result.data.length) {
@@ -86,9 +88,9 @@ const ItemsContextProvider = ({ children }) => {
 
     const addItemRequest = async (content) => {
         const result = await
-            postData('https://my-json-server.typicode.com/PacktPublishing/React -Projects/items', content);
+            postData('https://my-json-server.typicode.com/PacktPublishing/React-Projects/items', content);
 
-        if (result.data && result.data.hasOwbProperty('id')) {
+        if (result.data && result.data.hasOwnProperty('id')) {
             dispatch({ type: 'ADD_ITEM_SUCCESS', payload: content });
         } else {
             dispatch({ type: 'ADD_ITEM_ERROR' });
