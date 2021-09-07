@@ -4,6 +4,7 @@ export const ListsContext = React.createContext();
 
 const initialValue = {
     lists: [],
+    list: {},
     loading: true,
     error: '',
 };
@@ -13,13 +14,28 @@ const reducer = (value, action) => {
         case 'GET_LISTS_SUCCESS':
             return {
                 ...value,
-                lists: action.payload, loading: false,
+                lists: action.payload,
+                loading: false,
             };
         case 'GET_LISTS_ERROR':
             return {
                 ...value,
                 lists: [],
-                loading: false, error: action.payload,
+                loading: false,
+                error: action.payload,
+            };
+        case 'GET_LIST_SUCCESS':
+            return {
+                ...value,
+                list: action.payload,
+                loading: false,
+            };
+        case 'GET_LIST_ERROR':
+            return {
+                ...value,
+                list: {},
+                loading: false,
+                error: action.payload,
             };
         default:
             return value;
@@ -42,9 +58,9 @@ async function fetchData(dataSource) {
 const ListsContextProvider = ({ children }) => {
     const [value, dispatch] = React.useReducer(reducer, initialValue);
 
-    const getListRequest = async () => {
+    const getListsRequest = async () => {
         const result = await
-            fetchData('https://my-json-server.typicode.com/PacktPublishing/Reac t-Projects/lists');
+            fetchData('https://my-json-server.typicode.com/PacktPublishing/React-Projects/lists');
 
         if (result.data && result.data.length) {
             dispatch({ type: 'GET_LISTS_SUCCESS', payload: result.data });
@@ -53,8 +69,29 @@ const ListsContextProvider = ({ children }) => {
         }
     }
 
+    const getListRequest = async id => {
+        const result = await
+            fetchData(`https://my-json-server.typicode.com/PacktPublishing/React-Projects/lists/${id}`);
+
+        if (result.data && result.data.hasOwnProperty('id')) {
+            dispatch({ type: 'GET_LIST_SUCCESS', payload: result.data })
+        } else {
+            dispatch({ type: 'GET_LIST_ERROR', payload: result.error });
+        }
+    }
+
+    const addListRequest = (content) => {
+        actionDispatch({
+            type: 'ADD_LIST_REQUEST',
+            payload: {
+                dataSource: 'https://my-json-server.typicode.com/PacktPublishing/React-Projects /items',
+                content,
+            }
+        });
+    };
+
     return (
-        <ListsContext.Provider value={{ ...value, getListsRequest }}>
+        <ListsContext.Provider value={{ ...value, getListsRequest, addListRequest }}>
             {children}
         </ListsContext.Provider>
     )

@@ -15,9 +15,16 @@ const Alert = styled.span`
   text-align: center;
 `;
 
-const List = ({ lists, listItems, loading = false, error = false, match, history }) => {
-  const items = listItems && listItems.filter(item => item.listId === parseInt(match.params.id))
-  const list = lists && lists.find(list => list.id === parseInt(match.params.id));
+const List = ({ items, loading, error, list, getListRequest, getItemsRequest, match, history }) => {
+  React.useEffect(() => {
+    if (!list.id) {
+      getListRequest(match.params.id);
+    }
+    if (!items.length > 0) {
+      getItemsRequest(match.params.id);
+    };
+  }, [items, list, match.params.id, getItemsRequest, getListRequest]);
+
   return !loading && !error ? (
     <>
       {history && list && <SubHeader goBack={() => history.goBack()}

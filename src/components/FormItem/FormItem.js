@@ -29,8 +29,7 @@ const FormItem = ({
   type = 'text',
   placeholder = '',
   value,
-  handleOnChange,
-}) => (
+  handleOnChange }) => (
   <FormItemWrapper>
     <Label htmlFor={id}>{label}</Label>
     <Input
@@ -39,7 +38,7 @@ const FormItem = ({
       id={id}
       placeholder={placeholder}
       value={value}
-    />
+      onChange={e => handleOnChange(e.target.value)} />
   </FormItemWrapper>
 );
 
